@@ -1,0 +1,223 @@
+import { Image } from 'expo-image';
+import { Platform, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { HelloWave } from '@/components/hello-wave';
+import ParallaxScrollView from '@/components/parallax-scroll-view';
+import { ThemedText } from '@/components/themed-text';
+import { ThemedView } from '@/components/themed-view';
+import { Link, useRouter, Stack } from 'expo-router';
+import { useState } from 'react';
+
+export default function JugarFacil() {
+
+    //Para cambiar entre pantallas
+    const router = useRouter();
+    //Array 9 espacios en null al principio
+    let [tablero, hacerTablero] = useState(Array(9).fill(null));
+    //guardar los indices de la combinación ganadora
+    let [combinacionGana, hacerComboGana] = useState<number[] | null>(null);
+    // Guardar texto para enseñar quien ganó 
+    let [mensajeGanador, ponerMensajeGanador] = useState<String | null>(null);
+
+    //Al tocar una casilla 
+    const jugar = (indice: number) =>{
+      if(tablero[indice] || combinacionGana){
+        return
+      };
+      //Copia de tablero
+      const nuevoTablero = [...tablero];
+      //Ficha Pucca
+      nuevoTablero[indice] = "X";
+      hacerTablero(nuevoTablero);
+      
+      //Había un error que al ganar yo, la máquina pone una ficha más
+      let hayGanador = revisarTablero(nuevoTablero);
+
+      if(!hayGanador){
+        //lista combinaciones 
+        const combinaciones = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+        let poner = false;
+        let comprobarFichas = ["O","X"];
+
+        for(let i=0; i<comprobarFichas.length; i++){
+          let fichaActual = comprobarFichas[i];
+          for(let j=0; j<combinaciones.length; j++){
+            let a = combinaciones[j][0];
+            let b = combinaciones[j][1];
+            let c = combinaciones[j][2];
+
+            let contadorFichas = 0;
+            let posicionVacia = -1;
+
+            if(nuevoTablero[a]=== fichaActual){
+              contadorFichas++
+            }
+            else if(nuevoTablero[a]=== null){
+              posicionVacia = a;
+            }
+            if(nuevoTablero[b]=== fichaActual){
+              contadorFichas++
+            }
+            else if(nuevoTablero[b]=== null){
+              posicionVacia = b;
+            }
+            if(nuevoTablero[c]=== fichaActual){
+              contadorFichas++
+            }
+            else if(nuevoTablero[c]=== null){
+              posicionVacia = c;
+            }
+            if(contadorFichas === 2 && posicionVacia !== -1){
+              nuevoTablero[posicionVacia] = "O";
+              poner = true;
+              break;
+            }
+          }
+          if(poner){
+            break;
+          }
+        }
+        if(!poner){
+          //Buscar hueco libre
+          let espaciosLibres = [];
+          for(let i=0; i<nuevoTablero.length; i++){
+            if(nuevoTablero[i] === null){
+              espaciosLibres.push(i);
+            }
+          }
+          //Ficha de la máquina
+          if(espaciosLibres.length > 0){
+            let indiceMaquina = espaciosLibres[Math.floor(Math.random()*espaciosLibres.length)];
+            nuevoTablero[indiceMaquina] = "O";
+          }
+        }
+        //Ir comprobando si ya está resuelto el juego
+        revisarTablero(nuevoTablero);
+        //Guardar los cambios para verse en pantalla
+        hacerTablero(nuevoTablero);
+      }
+    }
+    
+    const revisarTablero =  (t: any[])=>{
+      //lista combinaciones 
+      const combinaciones = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+      for(let i=0; i<combinaciones.length; i++){
+        let [a, b, c] = combinaciones[i];
+        //si la casilla a no está vacía y es igual a b y a c, ya ganó uno
+        if (t[a] && t[a] === t[b] && t[a] === t[c]) {
+          //Pasar las posiciones de las fichas ganadoras
+          hacerComboGana([a,b,c]);
+          const ganador = t[a] === 'X' ? "Pucca" : "Garu";
+          ponerMensajeGanador("Ha ganado: "+ ganador + "!");
+          return true; // Hay ganador
+        }
+      }
+      if (!t.includes(null)) {
+        ponerMensajeGanador("Empate!")
+        return true; // Hay empate si no hay huecos libres
+      }
+    };
+    
+  return (
+    <View style={styles.container}>
+    <Stack.Screen options={{ headerShown: false }} />
+      <Image source={require('../assets/images/logoJuego.png')} style={styles.foto2}></Image>
+      <Text style={styles.textos}>Nivel Difícil!</Text>
+      <View style={styles.rejilla}>
+        {tablero.map((ficha, i) => {
+          const zonaGanadora = combinacionGana && combinacionGana.includes(i);
+          return(
+            <TouchableOpacity key={i} style={[styles.cuadro, zonaGanadora && styles.fondoGanador]} onPress={() => jugar(i)}>
+            {ficha === 'X' && <Image source={require('../assets/images/ficha_pucca.png')} style={styles.pieza} />}
+            {ficha === 'O' && <Image source={require('../assets/images/ficha_garu.png')} style={styles.pieza} />}
+          </TouchableOpacity>
+          )  
+      })}
+      </View>
+      <View>
+        {mensajeGanador && (
+          <Text style={styles.textoMensaje}>{mensajeGanador}</Text>
+        )}
+      </View>
+      <View style={styles.container2}>
+        <TouchableOpacity style={styles.miBoton1} onPress={() => console.log('Botón pulsado')}>
+          <Text style={styles.miTextoBoton}>Guardar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.miBoton3} onPress={() => router.back()}>
+          <Text style={styles.miTextoBoton}>Salir</Text>
+        </TouchableOpacity>
+      </View>
+    </View>  
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: "white",
+  },
+  container2: {
+    flex: 1,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent:"center",
+    alignContent:"center",
+    backgroundColor: "white",
+  
+    gap:20,
+  },
+  miBoton1:{
+    backgroundColor: "#E41922",
+    padding:10,
+    paddingLeft: 30,
+    paddingRight: 30,
+    borderRadius: 20,
+  },
+  miBoton3:{
+    backgroundColor: "black",
+    padding:10,
+    paddingLeft: 30,
+    paddingRight: 30,
+    borderRadius: 20,
+    margin:5
+  },
+  textos:{
+    marginTop: -70,    
+    color:"black",
+  },
+  textoMensaje:{
+    marginTop: 20,    
+    color:"black",
+  },
+  miTextoBoton:{
+    color:"white",
+  },
+  foto2: {
+    height: 240,
+    width: 240,
+    resizeMode: "contain"
+  },
+  rejilla: { 
+    width: 300, 
+    height: 300, 
+    flexDirection: "row", 
+    flexWrap: "wrap", 
+    marginTop: 40 
+  },
+  cuadro: { 
+    width: 100, 
+    height: 100, 
+    borderWidth: 1, 
+    borderColor: "#ddd7d7ff", 
+    alignItems: "center", 
+    justifyContent: "center" 
+  },
+  pieza: { 
+    width: 80, 
+    height: 80, 
+    resizeMode: "contain"
+  },
+  fondoGanador: {
+    backgroundColor:"#F4DEB6",
+  }
+});
