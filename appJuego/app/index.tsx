@@ -1,10 +1,6 @@
 import { Image } from 'expo-image';
-import { Platform, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link, useRouter } from 'expo-router';
+import {StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { useRouter } from 'expo-router';
 
 export default function HomeScreen() {
 
@@ -19,8 +15,8 @@ export default function HomeScreen() {
         <TouchableOpacity style={styles.miBoton1} onPress={() => router.push("/nivelJuego")}>
           <Text style={styles.miTextoBoton}>Empezar</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.miBoton2} onPress={() => console.log('Botón 2 pulsado')}>
-          <Text style={styles.miTextoBoton}>Ranking</Text>
+        <TouchableOpacity style={styles.miBoton2} onPress={() => router.push("/puntuaciones")}>
+          <Text style={styles.miTextoBoton}>Puntuaciones</Text>
         </TouchableOpacity>
       </View>
     </View>  

@@ -12,32 +12,41 @@ export default function JugarFacil() {
     const [mensajeGuardar, ponerMensaje] = useState(null);
     // Recogemos lo que enviamos desde la pantalla anterior
     const { resultado, nivel } = useLocalSearchParams();
-    let [mensaje, ponerMensajeResultado] = useState<String | null>(null);
-  
+
+    //Inicializar la base de datos
+    useEffect(() => {
+        initDatabase().catch(error => {
+            console.log('Error inicializando DB:', error);
+        });
+    }, []);
+    
     const guardarResultado = async () => {
-    const nombreFinal = nombreJugador.trim() || "Jugador";
-    
-    try {
-        // Llamada a la función corregida
-        const id = await guardarPartida(
-            nombreFinal,
-            nivel || "Facil",
-            resultado || "Empate"
-        );
+        // Si no hay nombre, usa "Jugador" por defecto
+        if (!nombreJugador.trim()) {
+            ponerNombre("Jugador");
+        }
+
+        try {
+            // Guardar en SQLite (LOCAL - sin servidor)
+            const id = await guardarPartida(
+                nombreJugador || "Jugador",
+                nivel || "Difícil",
+                resultado || "Empate"
+            );
+            
+            console.log("Partida guardada con ID:", id);
         
-        console.log("Partida guardada con ID:", id);
-        ponerMensajeResultado("¡Resultado guardado con éxito!");
-        
-        setTimeout(() => {
-            router.replace('/'); // Mejor usar replace o back
-        }, 1500);
-        
-    } catch (error) {
-        console.log("Error al guardar:", error);
-        ponerMensajeResultado("Error al guardar en la base de datos");
-    }
-};
-    
+            
+            // Espera 1.5 segundos y regresa
+            setTimeout(() => {
+                router.back();
+            }, 1500);
+            
+        } catch (error) {
+            console.log("Error al guardar:", error);
+        } finally {
+        }
+    };
 
 
   return (
@@ -48,7 +57,6 @@ export default function JugarFacil() {
       <TextInput style={styles.nombre} placeholder="Escribe tu nombre..." value={nombreJugador} onChangeText={ponerNombre}></TextInput>
       <Text>{mensajeGuardar}</Text>
       <View style={styles.container2}>
-        <Text style={styles.textos}>{mensaje}</Text>
         <TouchableOpacity style={styles.miBoton1} onPress={guardarResultado}>
           <Text style={styles.miTextoBoton}>Guardar</Text>
         </TouchableOpacity>

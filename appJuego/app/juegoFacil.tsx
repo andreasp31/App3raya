@@ -1,11 +1,8 @@
 import { Image } from 'expo-image';
 import { Platform, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { Link, useRouter, Stack } from 'expo-router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { initDatabase, guardarPartida } from '../utils/database';
 
 export default function JugarFacil() {
 
@@ -17,6 +14,20 @@ export default function JugarFacil() {
     let [combinacionGana, hacerComboGana] = useState<number[] | null>(null);
     // Guardar texto para enseñar quien ganó 
     let [mensajeGanador, ponerMensajeGanador] = useState<String | null>(null);
+
+    // Inicializar base de datos
+    useEffect(() => {
+        const inicializarDB = async () => {
+            try {
+                await initDatabase();
+                console.log("DB lista para usar");
+            } catch (error) {
+                console.log("Error inicializando DB: ", error);
+            }
+        };
+        
+        inicializarDB();
+    }, []);
 
     //Al tocar una casilla 
     const jugar = (indice: number) =>{
@@ -97,10 +108,10 @@ export default function JugarFacil() {
       <View style={styles.container2}>
         <TouchableOpacity style={styles.miBoton1} onPress={() => {
           router.push({
-          pathname: '/guardarFacil', // Nombre de tu nueva pantalla
+          pathname: '/guardarFacil', // Nombre de la nueva pantalla
           params: { 
             resultado: mensajeGanador?.toString(), 
-            nivel: "Difícil" 
+            nivel: "Facil" 
           }
         });
         }}>

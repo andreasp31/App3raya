@@ -1,9 +1,5 @@
 import { Image } from 'expo-image';
 import { Platform, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { Link, useRouter, Stack } from 'expo-router';
 import { useState } from 'react';
 
@@ -139,7 +135,7 @@ export default function JugarFacil() {
         )}
       </View>
       <View style={styles.container2}>
-        <TouchableOpacity style={styles.miBoton1} onPress={() => console.log('Botón pulsado')}>
+        <TouchableOpacity style={styles.miBoton1} onPress={() => router.push("/guardarDificil")}>
           <Text style={styles.miTextoBoton}>Guardar</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.miBoton3} onPress={() => router.back()}>
