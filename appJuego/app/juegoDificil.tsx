@@ -112,7 +112,7 @@ export default function JugarFacil() {
         return true; // Hay empate si no hay huecos libres
       }
     };
-    
+  //Lo que se ve
   return (
     <View style={styles.container}>
     <Stack.Screen options={{ headerShown: false }} />
@@ -135,7 +135,15 @@ export default function JugarFacil() {
         )}
       </View>
       <View style={styles.container2}>
-        <TouchableOpacity style={styles.miBoton1} onPress={() => router.push("/guardarDificil")}>
+        <TouchableOpacity style={styles.miBoton1} onPress={() => {
+          router.push({
+          pathname: '/guardarDificil', // Nombre de la nueva pantalla
+          params: { 
+            resultado: mensajeGanador?.toString(), 
+            nivel: "Difícil" 
+          }
+        });
+        }}>
           <Text style={styles.miTextoBoton}>Guardar</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.miBoton3} onPress={() => router.back()}>
@@ -146,6 +154,7 @@ export default function JugarFacil() {
   );
 }
 
+//Estilos
 const styles = StyleSheet.create({
   container: {
     flex: 1,

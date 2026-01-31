@@ -6,6 +6,8 @@ export default function NivelJugar() {
 
   //Para cambiar entre pantallas
   const router = useRouter();
+  //lo que se va a mostrar en pantalla: uso botones, imágenes y text
+  //<Stack.Screen options={{ headerShown: false }} /> esto es para quitar el menú de navegación que había arriba que trae por defecto
   return (
     <View style={styles.container}>
     <Stack.Screen options={{ headerShown: false }} />
@@ -26,7 +28,7 @@ export default function NivelJugar() {
     </View>  
   );
 }
-
+//Estilos
 const styles = StyleSheet.create({
   container: {
     flex: 1,

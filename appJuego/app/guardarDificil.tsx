@@ -4,7 +4,7 @@ import { Link, useRouter, Stack, useLocalSearchParams } from 'expo-router';
 import { useState, useEffect } from 'react';
 import { initDatabase, guardarPartida } from '../utils/database';
 
-export default function JugarFacil() {
+export default function guardarDificil() {
 
     //Para cambiar entre pantallas
     const router = useRouter();
@@ -25,7 +25,6 @@ export default function JugarFacil() {
         if (!nombreJugador.trim()) {
             ponerNombre("Jugador");
         }
-
         try {
             // Guardar en SQLite (LOCAL - sin servidor)
             const id = await guardarPartida(
@@ -35,8 +34,6 @@ export default function JugarFacil() {
             );
             
             console.log("Partida guardada con ID:", id);
-        
-            
             // Espera 1.5 segundos y regresa
             setTimeout(() => {
                 router.back();
@@ -47,8 +44,7 @@ export default function JugarFacil() {
         } finally {
         }
     };
-
-
+  //Lo que se ve
   return (
     <View style={styles.container}>
     <Stack.Screen options={{ headerShown: false }} />
@@ -67,7 +63,7 @@ export default function JugarFacil() {
     </View>  
   );
 }
-
+//Estilos
 const styles = StyleSheet.create({
   container: {
     flex: 1,

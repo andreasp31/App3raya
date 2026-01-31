@@ -2,7 +2,8 @@ import { Image } from 'expo-image';
 import { Platform, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import { Link, useRouter, Stack } from 'expo-router';
 import { useState, useEffect } from 'react';
-import { initDatabase, guardarPartida } from '../utils/database';
+//Importar la base de datos
+import { initDatabase } from '../utils/database';
 
 export default function JugarFacil() {
 
@@ -84,6 +85,7 @@ export default function JugarFacil() {
       }
     };
     
+  //Lo que se ve
   return (
     <View style={styles.container}>
     <Stack.Screen options={{ headerShown: false }} />
@@ -125,6 +127,7 @@ export default function JugarFacil() {
   );
 }
 
+//Estilos
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -1,8 +1,8 @@
 import { Image } from 'expo-image';
-import { Platform, StyleSheet, View, TouchableOpacity, Text, TextInput } from 'react-native';
-import { Link, useRouter, Stack, useLocalSearchParams } from 'expo-router';
-import { useState, useEffect } from 'react';
-import { initDatabase, guardarPartida } from '../utils/database';
+import { StyleSheet, View, TouchableOpacity, Text, TextInput } from 'react-native';
+import {useRouter, Stack, useLocalSearchParams } from 'expo-router';
+import { useState } from 'react';
+import { guardarPartida } from '../utils/database';
 
 export default function JugarFacil() {
 
@@ -15,31 +15,28 @@ export default function JugarFacil() {
     let [mensaje, ponerMensajeResultado] = useState<String | null>(null);
   
     const guardarResultado = async () => {
-    const nombreFinal = nombreJugador.trim() || "Jugador";
-    
-    try {
-        // Llamada a la función corregida
-        const id = await guardarPartida(
-            nombreFinal,
-            nivel || "Facil",
-            resultado || "Empate"
-        );
-        
-        console.log("Partida guardada con ID:", id);
-        ponerMensajeResultado("¡Resultado guardado con éxito!");
-        
-        setTimeout(() => {
-            router.replace('/'); // Mejor usar replace o back
-        }, 1500);
-        
-    } catch (error) {
-        console.log("Error al guardar:", error);
-        ponerMensajeResultado("Error al guardar en la base de datos");
-    }
-};
-    
-
-
+      const nombreFinal = nombreJugador.trim() || "Jugador";
+      try {
+          // Llamada a la función corregida
+          const id = await guardarPartida(
+              nombreFinal,
+              nivel || "Facil",
+              resultado || "Empate"
+          );
+          
+          console.log("Partida guardada con ID:", id);
+          ponerMensajeResultado("¡Resultado guardado con éxito!");
+          
+          setTimeout(() => {
+              router.replace('/');
+          }, 1500);
+      } 
+      catch (error) {
+          console.log("Error al guardar:", error);
+          ponerMensajeResultado("Error al guardar en la base de datos");
+      }
+  };
+  //Lo que se ve
   return (
     <View style={styles.container}>
     <Stack.Screen options={{ headerShown: false }} />
@@ -59,7 +56,7 @@ export default function JugarFacil() {
     </View>  
   );
 }
-
+//Estilos
 const styles = StyleSheet.create({
   container: {
     flex: 1,

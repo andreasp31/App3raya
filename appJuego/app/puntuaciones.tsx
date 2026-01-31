@@ -2,7 +2,7 @@ import { Image } from 'expo-image';
 import { Platform, StyleSheet, View, TouchableOpacity, Text, ActivityIndicator, FlatList } from 'react-native';
 import { Link, useRouter, Stack } from 'expo-router';
 import { useState, useEffect } from 'react';
-import { obtenerPartidas } from '../utils/database';
+import { obtenerPartidas, borrarPartidas } from '../utils/database';
 //Estructura de la partida 
 interface Partida {
   id: number;
@@ -35,6 +35,15 @@ export default function Puntuaciones() {
     cargarDatos();
   },[]);
 
+  const manejarBorrado = async () => {
+    try {
+      await borrarPartidas(); // Borra en la base de datos
+      setPartidas([]);   
+    } 
+    catch (error) {
+    }
+  };
+
   const listarPartida = ({item}:{item:Partida}) =>(
     <View>
       <View style={styles.fila}>
@@ -50,7 +59,7 @@ export default function Puntuaciones() {
       </View>
     </View>
   );
-
+  //Lo que se ve
   return (
     <View style={styles.container}>
     <Stack.Screen options={{ headerShown: false }} />
@@ -63,14 +72,17 @@ export default function Puntuaciones() {
             ListEmptyComponent={<Text>Aún no hay partidas guardadas</Text>}
         />
       <View style={styles.container2}>
-        <TouchableOpacity style={styles.miBoton3} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.miBoton4} onPress={manejarBorrado}>
+          <Text style={styles.miTextoBoton}>Borrar historial</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.miBoton3} onPress={()=>router.back()}>
           <Text style={styles.miTextoBoton}>Salir</Text>
         </TouchableOpacity>
       </View>
     </View>  
   );
 }
-
+//Estilos
 const styles = StyleSheet.create({
   fila:{
     flexDirection: 'row',
@@ -78,17 +90,18 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     marginTop: 20,
     width:350,
-    borderColor: '#ad4133ff',
+    borderColor: '#E41922',
     borderWidth: 1,
     borderRadius: 10
   },
   columna:{
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    paddingLeft:20
   },
   textoHueco:{
-    textAlign: 'center',
+    textAlign: 'left',
   },
   container: {
     flex: 1,
@@ -97,16 +110,23 @@ const styles = StyleSheet.create({
   },
   container2: {
     alignItems: 'center',
-    backgroundColor: "white",
-    gap:20,
+    backgroundColor: "white"
   },
-  miBoton3:{
+  miBoton4:{
     backgroundColor: "black",
     padding:10,
     paddingLeft: 30,
     paddingRight: 30,
     borderRadius: 20,
-    marginTop:5
+    marginTop: -100
+  },
+  miBoton3:{
+    backgroundColor: "#E41922",
+    padding:10,
+    paddingLeft: 30,
+    paddingRight: 30,
+    borderRadius: 20,
+    marginTop: -100
   },
   textos:{
     fontSize:20,    

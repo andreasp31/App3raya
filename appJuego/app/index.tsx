@@ -6,6 +6,7 @@ export default function HomeScreen() {
 
   //Para cambiar entre pantallas
   const router = useRouter();
+  //lo que se va a mostrar en pantalla: uso botones, imágenes y text
   return (
     <View style={styles.container}>
       <Image source={require('../assets/images/logoFoto.png')} style={styles.foto}></Image>
@@ -23,6 +24,7 @@ export default function HomeScreen() {
   );
 }
 
+//estilos
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -42,7 +44,7 @@ const styles = StyleSheet.create({
     paddingLeft: 30,
     paddingRight: 30,
     borderRadius: 20,
-    marginTop: 90,
+    marginTop: 90
   },
   miBoton2:{
     backgroundColor: "#E41922",
