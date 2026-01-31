@@ -31,12 +31,12 @@ export const guardarPartida = async (jugador, nivel, resultado) => {
     const db = await abrirDatabase();
     try {
         //Consulta
-        const resultado = await db.runAsync(
+        const result = await db.runAsync(
         'INSERT INTO partidas (jugador, nivel, resultado) VALUES (?, ?, ?);',
         [jugador, nivel, resultado]
         );
         console.log("Partida guardada en SQLite");
-        return resultado.lastInsertRowId; // Retorna el ID generado
+        return result.lastInsertRowId; // Retorna el ID generado
     } catch (error) {
         console.error("Error al guardar: ", error);
         throw error;
@@ -48,8 +48,8 @@ export const obtenerPartidas = async () => {
     const db = await abrirDatabase();
     try {
         //Consulta
-        const todasFilas = await db.getAllAsync('SELECT * FROM partidas ORDER BY id DESC LIMIT 10;');
-        return todasFilas;
+        const allRows = await db.getAllAsync('SELECT * FROM partidas ORDER BY id DESC LIMIT 10;');
+        return allRows;
     } catch (error) {
         console.error("Error al obtener partidas: ", error);
         throw error;

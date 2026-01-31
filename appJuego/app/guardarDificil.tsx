@@ -12,6 +12,7 @@ export default function guardarDificil() {
     const [mensajeGuardar, ponerMensaje] = useState(null);
     // Recogemos lo que enviamos desde la pantalla anterior
     const { resultado, nivel } = useLocalSearchParams();
+    let [mensaje, ponerMensajeResultado] = useState<String | null>(null);
 
     //Inicializar la base de datos
     useEffect(() => {
@@ -34,13 +35,15 @@ export default function guardarDificil() {
             );
             
             console.log("Partida guardada con ID:", id);
+            ponerMensajeResultado("¡Resultado guardado con éxito!");
             // Espera 1.5 segundos y regresa
             setTimeout(() => {
-                router.back();
+                router.replace('/');
             }, 1500);
             
         } catch (error) {
             console.log("Error al guardar:", error);
+            ponerMensajeResultado("Error al guardar en la base de datos");
         } finally {
         }
     };
@@ -53,6 +56,7 @@ export default function guardarDificil() {
       <TextInput style={styles.nombre} placeholder="Escribe tu nombre..." value={nombreJugador} onChangeText={ponerNombre}></TextInput>
       <Text>{mensajeGuardar}</Text>
       <View style={styles.container2}>
+        <Text style={styles.textos}>{mensaje}</Text>
         <TouchableOpacity style={styles.miBoton1} onPress={guardarResultado}>
           <Text style={styles.miTextoBoton}>Guardar</Text>
         </TouchableOpacity>

@@ -3,7 +3,7 @@ import { Platform, StyleSheet, View, TouchableOpacity, Text } from 'react-native
 import { Link, useRouter, Stack } from 'expo-router';
 import { useState } from 'react';
 
-export default function JugarFacil() {
+export default function JugarDificil() {
 
     //Para cambiar entre pantallas
     const router = useRouter();
